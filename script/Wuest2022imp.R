@@ -1,42 +1,10 @@
 library(tidyverse)
-library(patchwork)
 library(rNeighborGWAS)
 library(gaston)
-source("coord.R")
-
-
-ggMan = function(chr,pos,p) {
-  chr_rep = table(chr)
-  alphas = 1-(chr/2 - chr %/% 2)
-  cols = rgb(0,0,alphas,alphas)
-  x = coord(chr,pos)
-  y = -log10(p)
-  man = ggplot(NULL,aes(x=x$coord,y=y)) + geom_point(colour=cols) + theme_classic() + 
-    scale_x_continuous(name="Chromosomes", breaks=x$tic, labels=names(chr_rep)) +
-    ylab(expression(-log[10]*(italic(p)))) + geom_hline(yintercept=-log10(0.05/length(p)),lty=2,colour="black")
-  return(man)
-}
-
-ggQQ = function(chr,pos,p) {
-  chr_rep = table(chr)
-  alphas = 1-(chr/2 - chr %/% 2)
-  cols = rgb(0,0,alphas,alphas)
-  cols = cols[order(p,decreasing=FALSE)]
-  
-  o = -log(sort(p,decreasing=FALSE),10)
-  e = -log(ppoints(length(p)),10)
-  
-  qq = ggplot(data=NULL, mapping=aes(x=e,y=o))+
-    geom_point(colour=cols)+
-    geom_abline(intercept=0,slope=1,linetype="dashed")+
-    theme_classic()+
-    xlab(expression("Expected "*-log[10](p)))+ylab(expression("Observed "*-log[10](p)))
-  return(qq)
-}
 
 #####################
 # Wuest et al. (2022)
-pheno = read.csv("./Atha/Wuest2022PLoSBiolData/competition.csv")
+pheno = read.csv("../pheno/Wuest2022PLoSBiolData/competition.csv")
 
 pheno = filter(pheno,CommunityType!="single")
 pheno2 = gather(pheno,"Biomass_mg_posA","Biomass_mg_posB",key="posAB",value="biomass")
@@ -51,8 +19,8 @@ pheno2 = filter(pheno2, pheno2$focal!="XNA"|pheno2$neighbor!="XNA")
 pheno2 = pheno2[-which(is.na(pheno2$biomass)),]
 
 #load genotype data
-g = readRDS("../data/SEW2022_sub_snpsMAF5.rds")
-pos = readRDS("../data/SEW_sub_posMAF5.rds")
+g = readRDS("../geno/SEW2022_sub_snpsMAF5.rds")
+pos = readRDS("../geno/SEW_sub_posMAF5.rds")
 colnames(g) = paste0("X",colnames(g))
 g[g==0] = -1 # convert 0,1 alleles into -1,+1
 
@@ -85,7 +53,7 @@ coval = model.matrix(~Block+posAB+CommunityType,pheno2)
 sum(is.na(pheno2$biomass))
 
 Z = model.matrix(~Pot.No,pheno2)
-ZZ = tcrossprod(Z) # add random effects of pot IDs... not yet fixed
+ZZ = tcrossprod(Z) # add random effects of pot IDs
 ZZ = as.matrix(Matrix::nearPD(ZZ,maxit=10^6)$mat)
 
 q = ncol(g_self)
@@ -137,10 +105,10 @@ test_marker_i = function(i) { print(i)
     return(resList)
 }
 
-res = parallel::mcmapply(test_marker_i,1:q,mc.cores=10L)
+res = parallel::mcmapply(test_marker_i,1:q,mc.cores=8L)
 out = cbind(geno$pos,AF,t(res))
 colnames(out) = c("chr","pos","AF","Z_s","Z_n","Z_sim","p_s","p_n","p_sim")
 
-saveRDS(out,file="../output/NeiGWAS_Wuest_et_al_sim_all_biomassZ.rds")
+saveRDS(out,file="../output/NeiGWAS_Wuest_et_al_sim_all_biomassZ_impMAF5.rds")
 
 
