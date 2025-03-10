@@ -11,7 +11,7 @@ print(tar)
 # Alyr: A. lyrata allele
 # Atha: A. thaliana allele
 # Score: alignment score from the original .maf
-chr = read.csv(paste0("../geno/chr",tar,"_ann.csv.gz"),header=TRUE)
+chr = read.csv(paste0("./geno/chr",tar,"_ann.csv.gz"),header=TRUE)
 chr = chr[,-1]
 Chr = rep(tar,nrow(chr))
 chr = cbind(Chr,chr)
@@ -19,8 +19,8 @@ chr = cbind(c(1:nrow(chr)),chr)
 colnames(chr) = c("ID", "chr", "pos", "Alyr", "Atha", "Score")
 
 #load genotypes
-geno = readRDS("../geno/SEW2022_sub_snpsMAF5.rds")
-position = readRDS("../geno/SEW_sub_posMAF5.rds")
+geno = readRDS("./geno/SEW2022_sub_snpsMAF5.rds")
+position = readRDS("./geno/SEW_sub_posMAF5.rds")
 position = as.data.frame(position)
 
 geno = geno[position$chr==tar,]
@@ -53,24 +53,24 @@ hap = cbind(c(1:ncol(geno)), hap)
 
 hapend = proc.time() - start
 
-saveRDS(map, file=paste0("../output/chr",tar,"_AthaMapInfo.rds"), compress=TRUE, version=2)
-saveRDS(hap, file=paste0("../output/chr",tar,"_AthaHaploInfo.rds"), compress=TRUE, version=2)
+saveRDS(map, file=paste0("./output/chr",tar,"_AthaMapInfo.rds"), compress=TRUE, version=2)
+saveRDS(hap, file=paste0("./output/chr",tar,"_AthaHaploInfo.rds"), compress=TRUE, version=2)
 
-write.table(map, file=paste0("../output/map",tar,".inp"), quote=FALSE, col.names=FALSE, row.names=FALSE, sep=" ")
-write.table(hap, file=paste0("../output/chr",tar,".hap"), quote=FALSE, col.names=FALSE, row.names=FALSE, sep=" ")
+write.table(map, file=paste0("./output/map",tar,".inp"), quote=FALSE, col.names=FALSE, row.names=FALSE, sep=" ")
+write.table(hap, file=paste0("./output/chr",tar,".hap"), quote=FALSE, col.names=FALSE, row.names=FALSE, sep=" ")
 
 # load library and calc. EHH and then iHS
 # note: scan_hh() is not enough. iHS is required to compare two alleles.
 library(rehh)
-hap_data=data2haplohh(hap_file=paste0("../output/chr",tar,".hap"), 
-                      map_file=paste0("../output/map",tar,".inp"),
+hap_data=data2haplohh(hap_file=paste0("./output/chr",tar,".hap"), 
+                      map_file=paste0("./output/map",tar,".inp"),
                       recode.allele=FALSE, chr.name=tar)
 
 res_hh = scan_hh(hap_data, threads=1)
 res_ihs = ihh2ihs(res_hh)
 res_ihs = res_ihs$ihs
 
-write.csv(res_hh, file=paste0("../output/scan_hh98_chr",tar,".csv"))
-write.csv(res_ihs, file=paste0("../output/scan_ihs98_chr",tar,".csv"))
+write.csv(res_hh, file=paste0("./output/scan_hh98_chr",tar,".csv"))
+write.csv(res_ihs, file=paste0("./output/scan_ihs98_chr",tar,".csv"))
 
 

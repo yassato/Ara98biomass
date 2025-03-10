@@ -4,7 +4,7 @@ library(gaston)
 
 #####################
 # Wuest et al. (2022)
-pheno = read.csv("../pheno/Wuest2022PLoSBiolData/competition.csv")
+pheno = read.csv("./pheno/Wuest2022PLoSBiolData/competition.csv")
 
 pheno = filter(pheno,CommunityType!="single")
 pheno2 = gather(pheno,"Biomass_mg_posA","Biomass_mg_posB",key="posAB",value="biomass")
@@ -19,8 +19,8 @@ pheno2 = filter(pheno2, pheno2$focal!="XNA"|pheno2$neighbor!="XNA")
 pheno2 = pheno2[-which(is.na(pheno2$biomass)),]
 
 #load genotype data
-g = readRDS("../geno/SEW2022_sub_snpsMAF5.rds")
-pos = readRDS("../geno/SEW_sub_posMAF5.rds")
+g = readRDS("./geno/SEW2022_sub_snpsMAF5.rds")
+pos = readRDS("./geno/SEW_sub_posMAF5.rds")
 colnames(g) = paste0("X",colnames(g))
 g[g==0] = -1 # convert 0,1 alleles into -1,+1
 
@@ -109,6 +109,6 @@ res = parallel::mcmapply(test_marker_i,1:q,mc.cores=8L)
 out = cbind(geno$pos,AF,t(res))
 colnames(out) = c("chr","pos","AF","Z_s","Z_n","Z_sim","p_s","p_n","p_sim")
 
-saveRDS(out,file="../output/NeiGWAS_Wuest_et_al_sim_all_biomassZ_impMAF5.rds")
+saveRDS(out,file="./output/NeiGWAS_Wuest_et_al_sim_all_biomassZ_impMAF5.rds")
 
 

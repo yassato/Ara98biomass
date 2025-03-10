@@ -4,7 +4,7 @@ library(gaston)
 
 #####################
 # Wuest et al. (2022)
-pheno = read.csv("../pheno/Wuest2022PLoSBiolData/competition.csv")
+pheno = read.csv("./pheno/competition.csv")
 
 pheno = filter(pheno,CommunityType!="single")
 pheno2 = gather(pheno,"Biomass_mg_posA","Biomass_mg_posB",key="posAB",value="biomass")
@@ -19,7 +19,7 @@ pheno2 = filter(pheno2, pheno2$focal!="XNA"|pheno2$neighbor!="XNA")
 pheno2 = pheno2[-which(is.na(pheno2$biomass)),]
 
 #load genotype data
-g = read.csv("../pheno/call_method_75_TAIR9_250k.csv.gz",header=TRUE,skip=1)
+g = read.csv("./geno/call_method_75_TAIR9_250k.csv.gz",header=TRUE,skip=1)
 line_names = colnames(g)[-c(1:2)]
 info = g[,1:2]
 g = g[,-c(1:2)]
@@ -41,7 +41,7 @@ g_bin = t(g_bin)
 colnames(g_bin) = line_names
 
 geno = list(pos=info,g=g_bin)
-saveRDS(geno,file="../output/RegMap250k.rds",compress=TRUE,version=2) # for permutation test
+saveRDS(geno,file="./output/RegMap250k.rds",compress=TRUE,version=2) # for permutation test
 
 rm(g_bin); rm(g)
 gc();gc()
@@ -126,5 +126,5 @@ res = parallel::mcmapply(test_marker_i,1:q,mc.cores=8L)
 out = cbind(geno$pos,AF,t(res))
 colnames(out) = c("chr","pos","AF","Z_s","Z_n","Z_sim","p_s","p_n","p_sim")
 
-saveRDS(out,file="../output/NeiGWAS_Wuest_et_al_sim_all_biomassZ.rds")
-saveRDS(pheno2,file="../output/Wuest_pheno2.rds") # for permutation tests
+saveRDS(out,file="./output/NeiGWAS_Wuest_et_al_sim_all_biomassZ.rds")
+saveRDS(pheno2,file="./output/Wuest_pheno2.rds") # for permutation tests

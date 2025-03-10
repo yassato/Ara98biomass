@@ -3,8 +3,6 @@ library(tidyverse)
 ###############################
 # reshape SNPs for Wuest et al. (2022)
 
-setwd("Atha/Wuest2022PLoSBiolData/")
-
 geno = read.csv("sub_snps.csv.gz")
 position = read.csv("positions.csv.gz")
 colnames(geno)

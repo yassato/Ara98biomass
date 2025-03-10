@@ -3,7 +3,7 @@ library(rNeighborGWAS)
 library(gaston)
 
 #load genotype data
-g = read.csv("../geno/call_method_75_TAIR9_250k.csv.gz",header=TRUE,skip=1)
+g = read.csv("./geno/call_method_75_TAIR9_250k.csv.gz",header=TRUE,skip=1)
 line_names = colnames(g)[-c(1:2)]
 info = g[,1:2]
 g = g[,-c(1:2)]
@@ -31,7 +31,7 @@ gc();gc()
 
 #####################
 # Wuest et al. (2022)
-pheno = read.csv("../pheno/Wuest2022PLoSBiolData/competition.csv")
+pheno = read.csv("./pheno/competition.csv")
 
 pheno = filter(pheno,CommunityType!="single")
 pheno2 = gather(pheno,"DateOfFirstFlowering.PosA","DateOfFirstFlowering.PosB",key="posAB",value="flowering")

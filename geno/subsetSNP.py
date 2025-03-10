@@ -9,11 +9,8 @@ import numpy as np
 import csv
 
 # load data
-# The full_imputed_SNP is available at https://aragwas.1001genomes.org/#/download-center
-# 1. Access via "For other genotype versions, please refer to this google drive page" (accessed on 26 Oct 2022).
-# 2. A compressed file "full_imputed_SNP_MATRIX_2Jun2022.tar.gz" includes "all_chromosomes_binary.hdf5" used below.
-# 3. As recommended, the input file .hdf5 was handled using Python below
-input_file = "../../../data/GENOTYPES/4.hdf5"
+# Please download the full_imputed_SNP from https://aragwas.1001genomes.org/#/download-center
+input_file = "./geno/GENOTYPES/4.hdf5"
 h5file = h5py.File(input_file,"r")
 
 snps = h5file["snps"]
