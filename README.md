@@ -1,5 +1,5 @@
 # Ara98biomass
-Source code for "Linking frequency-dependent selection and overyielding through genome-wide association study of plant neighborhood effects" by Y. Sato.
+Source code for "Negative frequency-dependent selection underlies overyielding through neighbor genotypic effects in _Arabidopsis thaliana_" by Y. Sato.
 
 ## geno
 

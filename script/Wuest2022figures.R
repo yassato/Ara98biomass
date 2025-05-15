@@ -198,13 +198,6 @@ d[d$p_sim<th,]
 # top SNP on chr1: '11063' for supplementary figures
 # Montazeaud et al.'s (2023) SNP: '165823' for supplementary figures
 tar = 165819 # select a target SNP
-f = (g_self[,tar]+g_nei[,tar])/4+0.5
-plot(jitter(f),pheno2$biomass,pch=g_self[,tar]+2,col=grey(0.5,0.5),las=1)
-res1 = lm(pheno2[which(g_self[,tar]==1),"biomass"]~f[which(g_self[,tar]==1)])
-res2 = lm(pheno2[which(g_self[,tar]==-1),"biomass"]~f[which(g_self[,tar]==-1)])
-abline(a=res1$coefficients[1],b=res1$coefficients[2])
-abline(a=res2$coefficients[1],b=res2$coefficients[2],lty=2)
-
 p1 = ggplot(data=NULL,mapping=aes(x=jitter(f),y=pheno2$biomass)) + geom_point(pch=g_self[,tar]+2,col="grey") + 
   geom_abline(intercept=res1$coefficients[1],slope=res1$coefficients[2]) +
   geom_abline(intercept=res2$coefficients[1],slope=res2$coefficients[2],lty=2) + 
@@ -227,7 +220,7 @@ p2 = ggplot(data=data,mapping=aes(x=self_neig,y=biomass)) + geom_jitter(pch=g_se
   
 p3 = ggplot(data=NULL,mapping=aes(x=factor(g_sim[,tar]),y=pheno2$biomass)) + geom_jitter(pch=g_self[,tar]+2,col=grey(0.5,0.25)) + 
   geom_violin(alpha=0.5) + geom_boxplot(width=0.3,outlier.shape=NA,alpha=0.5) + ylab("biomass (mg)") + xlab("") + 
-  scale_x_discrete(labels=c("mixture","monoculture")) + theme_classic()
+  scale_x_discrete(labels=c("biallelic","monoallelic")) + theme_classic()
 
 ggsave(p2+p1+p3,filename="wuest_boxplot1.pdf",width=7,height=3)
 
@@ -304,11 +297,11 @@ ehhp = ggplot(NULL, aes(x=ehh_all[(ehh_all$CHR==5&ehh_all$POSITION>2800000)&ehh_
   geom_line() + ylab("iHS") + xlab("Position (bp)") + theme_bw() +
   geom_hline(yintercept=quantile(ehh_all$IHS,0.975,na.rm=TRUE),lty=2)
 
-hbeta = ggplot(beta_all,aes(x=Beta1)) + geom_histogram() + ylab("BETA(1)") +
+hbeta = ggplot(beta_all,aes(x=Beta1)) + geom_histogram() + xlab("BETA(1)") +
   geom_vline(xintercept=quantile(beta_all$Beta1,0.975,na.rm=TRUE),lty=2) + 
   coord_flip() + theme_classic()
 
-hehh = ggplot(ehh_all,aes(x=IHS)) + geom_histogram() + ylab("iHS") +
+hehh = ggplot(ehh_all,aes(x=IHS)) + geom_histogram() + xlab("iHS") +
   geom_vline(xintercept=quantile(ehh_all$IHS,0.975,na.rm=TRUE),lty=2) + 
   coord_flip() + theme_classic()
 
